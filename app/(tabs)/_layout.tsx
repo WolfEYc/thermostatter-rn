@@ -40,7 +40,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="ble"
+                name="Bluetooth"
                 options={{
                     title: "Bluetooth",
                     tabBarIcon: ({ color, focused }) => (

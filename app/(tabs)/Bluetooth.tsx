@@ -1,24 +1,27 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { StyleSheet, Image, Platform } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-import { Collapsible } from "@/components/Collapsible";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 
-import { BleManager, Device } from 'react-native-ble-plx'
+import { Device } from 'react-native-ble-plx'
 import { useEffect, useState } from "react";
+import DeviceSelector from "@/components/DeviceSelector";
+import { GlobalStyles } from "@/constants/Styles";
+import { BLUETOOH_LOCAL_ID, GLOBAL_BLE_MANAGER } from "@/constants/BluetoothArduino";
 
-export const manager = new BleManager()
 
 
-export default function FunnyTab() {
+
+export default function Bluetooth() {
     const devicesMap = new Map<string, Device>()
-    const [devices, setDevices] = useState(Array<Device>)
+    const [devices, setDevices] = useState(new Array<Device>())
     const [managerState, setManagerState] = useState("")
+
     function scanAndConnect() {
-        manager.startDeviceScan(null, null, (error, device) => {
-            if (error || device == null || device.name == null) {
+        GLOBAL_BLE_MANAGER.startDeviceScan(null, null, (error, device) => {
+            if (error || device == null || device.localName != BLUETOOH_LOCAL_ID) {
                 // Handle error (scanning will be stopped automatically)
                 return
             }
@@ -29,7 +32,7 @@ export default function FunnyTab() {
     }
 
     useEffect(() => {
-        const subscription = manager.onStateChange(state => {
+        const subscription = GLOBAL_BLE_MANAGER.onStateChange(state => {
             setManagerState(state)
             if (state === 'PoweredOn') {
                 scanAndConnect()
@@ -37,7 +40,7 @@ export default function FunnyTab() {
             }
         }, true)
         return () => subscription.remove()
-    }, [manager])
+    }, [GLOBAL_BLE_MANAGER])
 
     return (
         <ParallaxScrollView
@@ -51,14 +54,14 @@ export default function FunnyTab() {
             }
         >
             <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">L + Ratio</ThemedText>
+                <ThemedText type="title">Devices</ThemedText>
             </ThemedView>
             <ThemedText>
                 managerState={managerState}
             </ThemedText>
-            <Collapsible title="Devices">
-                {devices.map(device => <ThemedText key={device.id}>{device.name}</ThemedText>)}
-            </Collapsible>
+            <View style={GlobalStyles.container}>
+                {devices.map(device => <DeviceSelector key={device.id} device={device} />)}
+            </View>
         </ParallaxScrollView>
     );
 }

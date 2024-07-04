@@ -1,7 +1,7 @@
 {
     "expo": {
-        "name": "thermostatter",
-        "slug": "thermostatter",
+        "name": "thermostatter-rn",
+        "slug": "thermostatter-rn",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
@@ -14,7 +14,7 @@
         },
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.wolfeyc.thermostatter"
+            "bundleIdentifier": "com.wolfeyc.thermostatter-rn"
         },
         "android": {
             "adaptiveIcon": {
